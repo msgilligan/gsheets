@@ -1,86 +1,103 @@
-/**
- Copyright (c) 2012, Andre Steingress
- All rights reserved.
-
- Redistribution and use in source and binary forms, with or without
- modification, are permitted provided that the following conditions are met:
- 1. Redistributions of source code must retain the above copyright
-    notice, this list of conditions and the following disclaimer.
- 2. Redistributions in binary form must reproduce the above copyright
-    notice, this list of conditions and the following disclaimer in the
-    documentation and/or other materials provided with the distribution.
- 3. All advertising materials mentioning features or use of this software
-    must display the following acknowledgement:
-    This product includes software developed by the ASF.
- 4. Neither the name of the ASF nor the
-    names of its contributors may be used to endorse or promote products
-    derived from this software without specific prior written permission.
-
- THIS SOFTWARE IS PROVIDED BY Andre Steingress ''AS IS'' AND ANY
- EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- DISCLAIMED. IN NO EVENT SHALL Andre Steingress BE LIABLE FOR ANY
- DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
- GSheets is a Groovy builder based on Apache POI.
- */
 package org.gsheets
 
+import static org.junit.Assert.*
+
+import org.apache.poi.ss.usermodel.Cell
+import org.apache.poi.ss.usermodel.Row
+import org.apache.poi.ss.usermodel.Sheet
 import org.apache.poi.ss.usermodel.Workbook
-import org.apache.poi.ss.usermodel.CellStyle
-import org.apache.poi.ss.usermodel.Font
-import org.apache.poi.hssf.usermodel.HSSFCell
+import org.junit.Test
+
 
 /**
- * @author me@andresteingress.com
+ * @author Ken Krebs - kktec1@gmail.com @kktec
  */
-class ExcelFileTests extends GroovyTestCase {
+class ExcelFileTests {
 
-    File excel
+	Workbook workbook = wb {}
+	Sheet sheet
 
-    void setUp() {
-        excel = new File("test.xls")
-        if (!excel.exists()) excel.createNewFile()
-    }
+	@Test
+	void create_empty_Workbook() {
+		assert workbook instanceof Workbook
+		assert workbook.numberOfSheets == 0
+	}
 
-    void testCreateSimpleWorkbook()  {
-        Workbook workbook = new ExcelFile().workbook {
+	@Test
+	void create_Workbook_with_sheets() {
+		wb {
+			data {
+				sheet('sheet1') {}
+				sheet('sheet2') {}
+			}
+		}
 
-            styles {
-                font("bold")  { Font font ->
-                    font.setBoldweight(Font.BOLDWEIGHT_BOLD)
-                }
+		workbook.with {
+			assert getSheetAt(0).sheetName == 'sheet1'
+			assert getSheetIndex('sheet2') == 1
+			assert numberOfSheets == 2
+		}
+	}
 
-                cellStyle ("header")  { CellStyle cellStyle ->
-                    cellStyle.setAlignment(CellStyle.ALIGN_CENTER)
+	@Test
+	void create_Workbook_with_a_data_grid() {
+		def headers = ['String', 'Boolean', 'Date', 'Object', 'Integer', 'Double', 'BigDecimal']
+		Date date = new Date()
+		def o = new Object()
+		wb {
+			data {
+				sheet('sheet') { 
+					header(headers) 
+					row(['ken', true, date, o, 13, 1/3, 13.267])
+					row([null])
+				}
+			}
+		}
 
-                }
-            }
+		sheet = workbook.getSheetAt(0)
+		assertHeaderRow headers
+		
+		Row r1 = sheet.getRow(1)
+		assert_stringCellValue r1, 0, 'ken'
+		assert_stringCellValue r1, 1, 'true'
+		assert_dateCellValue r1, 2, date		
+		assert_stringCellValue r1, 3, o
+		assert_numericCellValue r1, 4, 13
+		assert_numericCellValue r1, 5, 0.3333333333
+		assert_numericCellValue r1, 6, 13.267
+		
+		Row r2 = sheet.getRow(2)
+		assert_stringCellValue r2, 0, ''
+	}
+	
+	private assert_stringCellValue(row, cellNum, value) {
+		Cell cell = row.getCell(cellNum)
+		assert cell.cellType == Cell.CELL_TYPE_STRING
+		assert cell.stringCellValue == value.toString()
+	}
 
-            data {
-                // data
-                sheet ("Export")  {
-                    header(["Column1", "Column2", "Column3"])
+	private assert_dateCellValue(row, cellNum, Date value) {
+		Cell cell = row.getCell(cellNum)
+		assert cell.cellType == Cell.CELL_TYPE_NUMERIC
+		assert cell.dateCellValue == value
+	}
+	
+	private assert_numericCellValue(row, cellNum, value) {
+		Cell cell = row.getCell(cellNum)
+		assert cell.cellType == Cell.CELL_TYPE_NUMERIC
+		assert cell.numericCellValue == value
+	}
+	
+	private assertHeaderRow(List headers) {
+		Row header = sheet.getRow(0)
+		headers.eachWithIndex { h, i ->
+			Cell cell = header.getCell(i)
+			assert cell.cellType == Cell.CELL_TYPE_STRING
+			assert cell.stringCellValue == h
+		}
+	}
 
-                    row([10, 20, "=A2*B2"])
-                    row(["", "", "=sum(C2)"])
-                }
-            }
-
-            commands {
-                applyCellStyle(cellStyle: "header", font: "bold", rows: 1, columns: 1..3)
-                applyColumnWidth(columns: 1..2, width: 200)
-                // mergeCells(rows: 1, columns: 1..3)
-            }
-        }
-
-        def excelOut = new FileOutputStream(excel)
-        workbook.write(excelOut)
-        excelOut.close()
-    }
+	private wb(Closure c) {
+		workbook = new ExcelFile().workbook(c)
+	}
 }
