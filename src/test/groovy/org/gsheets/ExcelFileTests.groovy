@@ -18,13 +18,13 @@ class ExcelFileTests {
 	Sheet sheet
 
 	@Test
-	void create_empty_Workbook() {
+	void empty_workbook() {
 		assert workbook instanceof Workbook
 		assert workbook.numberOfSheets == 0
 	}
 
 	@Test
-	void create_Workbook_with_sheets() {
+	void workbook_with_sheets() {
 		wb {
 			data {
 				sheet('sheet1') {}
@@ -40,7 +40,7 @@ class ExcelFileTests {
 	}
 
 	@Test
-	void create_Workbook_with_a_data_grid() {
+	void workbook_with_data_grid() {
 		def headers = ['String', 'Boolean', 'Date', 'Object', 'Integer', 'Double', 'BigDecimal']
 		Date date = new Date()
 		def o = new Object()
