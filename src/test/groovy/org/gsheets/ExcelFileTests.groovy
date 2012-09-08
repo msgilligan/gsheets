@@ -10,6 +10,8 @@ import org.junit.Test
 
 
 /**
+ * see README for copyright/licensing info 
+
  * @author Ken Krebs - kktec1@gmail.com @kktec
  */
 class ExcelFileTests {
