@@ -239,7 +239,7 @@ class ExcelFile {
         }
     }
 
-    void emptyRow()  {
+    Row emptyRow()  {
         assert sheet
 
         sheet.createRow(rowsCounter++ as int)
