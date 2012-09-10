@@ -1,9 +1,9 @@
 package org.gsheets
 
+import static org.junit.Assert.*
+
 import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.ss.usermodel.Row
-import org.apache.poi.ss.usermodel.Sheet
-import org.apache.poi.ss.usermodel.Workbook
 import org.junit.Test
 
 abstract class WorkbookBuilderTestCase {
@@ -11,20 +11,15 @@ abstract class WorkbookBuilderTestCase {
 	WorkbookBuilderSupport builder
 	
 	GroovyTestCase tc = new GroovyTestCase()
-
-	Workbook getWb() {
-		builder.wb
-	}
-
-	Sheet getSht() {
-		builder.currentSheet
-	}
-
+	
+	def headers = ['String', 'Boolean', 'Date', 'Object', 'Number']
+	
+	
 	@Test
 	void empty_workbook() {
 		builder.workbook {
 		}
-		assert wb.numberOfSheets == 0
+		assert builder.wb.numberOfSheets == 0
 	}
 
 	@Test
@@ -36,75 +31,73 @@ abstract class WorkbookBuilderTestCase {
 			}
 		}
 
-		wb.with {
+		builder.wb.with {
 			assert getSheetAt(0).sheetName == 'sheet1'
 			assert getSheetIndex('sheet2') == 1
 			assert numberOfSheets == 2
 		}
 	}
 	
-	@Test 
-	void workbook_with_emptyRow() {
+	@Test
+	void workbook_with_rows() {
+		int v = 13
 		builder.workbook {
 			sheet('sheet') {
-				emptyRow()
+				row()
+				row(headers)
+				row('String', 'Boolean', 'Date', 'Object', 'Number')
+				row("$v")
+				row(true)
+				row(12.3F)
+				row(12.4D)
+				row(12.34)
+				row(v)
+				row(v as Long)
+				row(v as Short)
+				row('x', v)
 			}
 		}
-		assert builder.currentRow
-		assert builder.currentRowNum == 1
-	}
-
-	@Test
-	void workbook_with_header() {
-		def headers = ['String', 'Boolean', 'Date', 'Object', 'Integer', 'Double', 'BigDecimal']
-
-		builder.workbook {
-			sheet('sheet') {
-				header(headers)
-			}
-		}
-		assertHeaderRow headers
-	}
-	
-	@Test
-	void workbook_header_must_be_firstRow() {
-		def headers = ['String', 'Boolean', 'Date', 'Object', 'Integer', 'Double', 'BigDecimal']
-
-		assert 'header must be first row' == tc.shouldFail(IllegalStateException) {
-			builder.workbook {
-				sheet('sheet') {
-					emptyRow()
-					header(headers)
-				}
-			}
-		}
+		
+		assert cell0(0) == null
+		assert_string_row(1, headers)
+		assert_string_row(2, headers)
+		assert cell0(3).stringCellValue == '13'
+		assert cell0(4).booleanCellValue
+		assertEquals cell0(5).numericCellValue, 12.3, 0.00001
+		assertEquals cell0(6).numericCellValue, 12.4, 0.00001
+		assertEquals cell0(7).numericCellValue, 12.34, 0.00001
+		assert cell0(8).numericCellValue == 13
+		assert cell0(9).numericCellValue == 13
+		assert cell0(10).numericCellValue == 13
+		assert cell(11, 0).stringCellValue == 'x' 
+		assert cell(11, 1).numericCellValue == 13 
+		assert builder.currentRow.rowNum == 11
+		assert builder.nextRowNum == 12
 	}
 		
-	protected assert_stringCellValue(row, cellNum, value) {
-		Cell cell = row.getCell(cellNum)
-		assert cell.cellType == Cell.CELL_TYPE_STRING
-		assert cell.stringCellValue == value.toString()
-	}
-
-	protected assert_dateCellValue(row, cellNum, Date value) {
-		Cell cell = row.getCell(cellNum)
-		assert cell.cellType == Cell.CELL_TYPE_NUMERIC
-		assert cell.dateCellValue == value
-	}
-
-	protected assert_numericCellValue(row, cellNum, value) {
-		Cell cell = row.getCell(cellNum)
-		assert cell.cellType == Cell.CELL_TYPE_NUMERIC
-		assert cell.numericCellValue == value
-	}
-
-	protected assertHeaderRow(headers) {
-		Row header = sht.getRow(0)
-		headers.eachWithIndex { h, i ->
-			Cell cell = header.getCell(i)
+	protected assert_string_row(rowNum, values) {
+		Row row = builder.currentSheet.getRow(rowNum)
+		values.eachWithIndex { v, i ->
+			Cell cell = row.getCell(i)
 			assert cell.cellType == Cell.CELL_TYPE_STRING
-			assert cell.stringCellValue == h
+			assert cell.stringCellValue == v
 		}
-		assert builder.currentRowNum == 1
 	}
+	
+	protected Cell cell(rowNum, cellNum) {
+		cell(builder.currentSheet.getRow(rowNum), cellNum)
+	}
+	
+	protected Cell cell(Row row, cellNum) {
+		row.getCell cellNum
+	}
+
+	protected Cell cell0(rowNum) {
+		cell rowNum, 0
+	}
+
+	protected Cell cell(cellNum) {
+		cell builder.currentRow, cellNum
+	}
+
 }

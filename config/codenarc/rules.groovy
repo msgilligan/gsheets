@@ -3,7 +3,9 @@ ruleset {
 	ruleset('rulesets/braces.xml')
 	ruleset('rulesets/concurrency.xml')
 	ruleset('rulesets/convention.xml')
-	ruleset('rulesets/design.xml')
+	ruleset('rulesets/design.xml') {
+		exclude 'AbstractClassWithoutAbstractMethod'
+	}
 	ruleset('rulesets/dry.xml') {
 //		exclude 'DuplicateNumberLiteral'
 //		exclude 'DuplicateListLiteral'
@@ -20,7 +22,7 @@ ruleset {
 	ruleset('rulesets/imports.xml')
 	ruleset('rulesets/jdbc.xml')
 	ruleset('rulesets/junit.xml') {
-//		exclude 'JUnitStyleAssertions'
+		exclude 'JUnitStyleAssertions'
 		exclude 'JUnitSetUpCallsSuper'
 //		exclude 'JUnitPublicNonTestMethod'
 	}
