@@ -21,3 +21,7 @@ dependencies {
     compile group: 'org.apache.poi', name: 'poi', version: '3.8'
     compile group: 'org.apache.poi', name: 'poi-ooxml', version: '3.8'
 }
+
+task wrapper(type: Wrapper) {
+	gradleVersion = '1.1'
+}
