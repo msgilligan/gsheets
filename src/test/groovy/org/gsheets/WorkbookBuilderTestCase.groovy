@@ -4,6 +4,9 @@ import static org.junit.Assert.*
 
 import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.ss.usermodel.Row
+import org.apache.poi.ss.usermodel.Workbook
+import org.junit.After
+import org.junit.Before
 import org.junit.Test
 
 abstract class WorkbookBuilderTestCase {
@@ -12,8 +15,21 @@ abstract class WorkbookBuilderTestCase {
 	
 	GroovyTestCase tc = new GroovyTestCase()
 	
-	def headers = ['String', 'Boolean', 'Date', 'Object', 'Number']
+	def headers = ['a', 'b', 'c']
 	
+	abstract protected WorkbookBuilderSupport newBuilder()
+	
+	abstract protected Class workbookType()
+	
+	@Before()
+	void setUp() {
+		builder = newBuilder()
+	}
+	
+	@After()
+	void tearDown() {
+		assert builder.wb.class == workbookType()
+	}
 	
 	@Test
 	void empty_workbook() {
@@ -45,7 +61,7 @@ abstract class WorkbookBuilderTestCase {
 			sheet('sheet') {
 				row()
 				row(headers)
-				row('String', 'Boolean', 'Date', 'Object', 'Number')
+				row('a', 'b', 'c')
 				row("$v")
 				row(true)
 				row(12.3F)

@@ -1,19 +1,18 @@
 package org.gsheets
 
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import org.junit.After
 import org.junit.Before
 
 class XmlWorkbookBuilderTests extends WorkbookBuilderTestCase {
 
-	@Before()
-	void setup() {
+	protected WorkbookBuilderSupport newBuilder() {
 		builder = new XmlWorkbookBuilder()
 	}
 	
-	@After
-	void teardown() {
-		assert builder.wb.class == XSSFWorkbook
+	protected Class workbookType() {
+		XSSFWorkbook
 	}
-
+	
 }
