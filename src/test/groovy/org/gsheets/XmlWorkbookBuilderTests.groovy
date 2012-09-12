@@ -11,8 +11,4 @@ class XmlWorkbookBuilderTests extends WorkbookBuilderTestCase {
 		builder = new XmlWorkbookBuilder()
 	}
 	
-	protected Class workbookType() {
-		XSSFWorkbook
-	}
-	
 }

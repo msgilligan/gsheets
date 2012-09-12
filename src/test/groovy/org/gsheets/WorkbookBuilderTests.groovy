@@ -1,9 +1,5 @@
 package org.gsheets
 
-import org.apache.poi.hssf.usermodel.HSSFWorkbook
-import org.apache.poi.ss.usermodel.Workbook;
-import org.junit.After
-import org.junit.Before
 
 class WorkbookBuilderTests extends WorkbookBuilderTestCase {
 
@@ -11,8 +7,8 @@ class WorkbookBuilderTests extends WorkbookBuilderTestCase {
 		builder = new WorkbookBuilder()
 	}
 	
-	protected Class workbookType() {
-		HSSFWorkbook
+	static void main() {
+		
 	}
 	
 }

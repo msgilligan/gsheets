@@ -19,8 +19,6 @@ abstract class WorkbookBuilderTestCase {
 	
 	abstract protected WorkbookBuilderSupport newBuilder()
 	
-	abstract protected Class workbookType()
-	
 	@Before()
 	void setUp() {
 		builder = newBuilder()
@@ -28,7 +26,7 @@ abstract class WorkbookBuilderTestCase {
 	
 	@After()
 	void tearDown() {
-		assert builder.wb.class == workbookType()
+		assert builder.wb.class == builder.workbookType()
 	}
 	
 	@Test
