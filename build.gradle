@@ -15,11 +15,15 @@ repositories {
 }
 
 dependencies {
-    groovy group: 'org.codehaus.groovy', name: 'groovy', version: '1.8.5'
-    testCompile group: 'junit', name: 'junit', version: '4.10'
+    groovy 'org.codehaus.groovy:groovy:1.8.5'
 	
-    compile group: 'org.apache.poi', name: 'poi', version: '3.8'
-    compile group: 'org.apache.poi', name: 'poi-ooxml', version: '3.8'
+	testCompile 'org.hamcrest:hamcrest-core:1.3'
+	testCompile 'org.hamcrest:hamcrest-library:1.3'
+    testCompile 'junit:junit:4.10'
+	testCompile 'org.spockframework:spock-core:0.6-groovy-1.8'
+	
+    compile 'org.apache.poi:poi:3.8'
+    compile 'org.apache.poi:poi-ooxml:3.8'
 }
 
 task wrapper(type: Wrapper) {

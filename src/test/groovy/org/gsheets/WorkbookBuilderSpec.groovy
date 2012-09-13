@@ -1,14 +1,9 @@
 package org.gsheets
 
-
-class WorkbookBuilderTests extends WorkbookBuilderTestCase {
+class WorkbookBuilderSpec extends WorkbookBuilderBaseSpec {
 
 	protected WorkbookBuilderSupport newBuilder() {
 		builder = new WorkbookBuilder()
-	}
-	
-	static void main() {
-		
 	}
 	
 }

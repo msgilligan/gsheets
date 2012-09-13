@@ -4,7 +4,12 @@ ruleset {
 	ruleset('rulesets/concurrency.xml')
 	ruleset('rulesets/convention.xml')
 	ruleset('rulesets/design.xml')
-	ruleset('rulesets/dry.xml') {}
+	ruleset('rulesets/dry.xml') {
+		exclude 'DuplicateNumberLiteral'
+		exclude 'DuplicateListLiteral'
+		exclude 'DuplicateMapLiteral'
+		exclude 'DuplicateStringLiteral'
+	}
 	ruleset('rulesets/exceptions.xml')
 	ruleset('rulesets/formatting.xml')
 	ruleset('rulesets/generic.xml')
@@ -17,7 +22,11 @@ ruleset {
 		exclude 'JUnitSetUpCallsSuper'
 	}
 	ruleset('rulesets/logging.xml')
-	ruleset('rulesets/naming.xml')	
+	ruleset('rulesets/naming.xml') {
+		MethodName {
+			regex = /[a-z][\w\s'\(\)]*/
+		}
+	}	
 	ruleset('rulesets/security.xml')
 	ruleset('rulesets/serialization.xml')
 	ruleset('rulesets/size.xml')

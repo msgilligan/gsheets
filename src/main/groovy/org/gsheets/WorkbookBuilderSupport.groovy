@@ -93,11 +93,23 @@ abstract class WorkbookBuilderSupport {
 		cell value, index, Cell.CELL_TYPE_NUMERIC
 	}
 	
-	Cell cell(value, int index, int cellType) {
+	Cell cell(Date date, int index) {
+		cell date, index, Cell.CELL_TYPE_NUMERIC
+	}
+	
+	Cell cell(Formula formula, int index) {
+		cell formula.text, index, Cell.CELL_TYPE_FORMULA
+	}
+	
+	Cell cell(value, int index) {
+		cell value.toString(), index, Cell.CELL_TYPE_STRING
+	}
+	
+	protected Cell cell(value, int index, int cellType) {
 		Cell cell = currentRow.createCell(index)
 		cell.cellType = cellType
 		cell.setCellValue(value)
 		cell
-
 	}
 }
+
