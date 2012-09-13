@@ -52,5 +52,5 @@ local.properties
 # CDT-specific
 .cproject
 
-test.xls
+*.xls*
 /gradle-app.setting

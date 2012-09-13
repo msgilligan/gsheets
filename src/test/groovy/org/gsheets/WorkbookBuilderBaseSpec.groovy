@@ -1,7 +1,9 @@
 package org.gsheets
 
-import static  org.hamcrest.Matchers.closeTo
-import static  spock.util.matcher.HamcrestSupport.that
+import static org.hamcrest.Matchers.*
+import static spock.util.matcher.HamcrestSupport.*
+
+import java.text.SimpleDateFormat
 
 import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.ss.usermodel.Row
@@ -226,5 +228,28 @@ abstract class WorkbookBuilderBaseSpec extends Specification {
 	
 	protected Sheet getSheet() {
 		builder.currentSheet
+	}
+	
+	static demospec = {
+		workbook {
+			def fmt = new SimpleDateFormat('yyyy-MM-dd')
+			sheet('sheet 1') {
+				row('Name', 'Date', 'Count', 'Value', 'Active')
+				row('a', fmt.parse('2012-09-12'), 69, 12.34, true)
+				row('b', fmt.parse('2012-09-13'), 666, 43.21, false)
+			}
+		}
+	}
+	
+	static file(name, builder) {
+		Workbook workbook = builder.workbook demospec
+		
+		File file = new File(name)
+		if(!file.exists()) {
+			file.createNewFile()
+		}
+		def out = new FileOutputStream(file)
+		workbook.write out
+		out.close()
 	}
 }
