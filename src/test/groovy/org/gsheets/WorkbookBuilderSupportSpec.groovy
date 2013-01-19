@@ -12,7 +12,7 @@ import org.apache.poi.ss.usermodel.Workbook
 
 import spock.lang.Specification
 
-abstract class WorkbookBuilderBaseSpec extends Specification {
+abstract class WorkbookBuilderSupportSpec extends Specification {
 	
 	WorkbookBuilderSupport builder
 	

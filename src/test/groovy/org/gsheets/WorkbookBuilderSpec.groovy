@@ -5,7 +5,7 @@ import java.text.SimpleDateFormat
 import org.apache.poi.ss.formula.functions.T
 import org.apache.poi.ss.usermodel.Workbook
 
-class WorkbookBuilderSpec extends WorkbookBuilderBaseSpec {
+class WorkbookBuilderSpec extends WorkbookBuilderSupportSpec {
 
 	protected WorkbookBuilderSupport newBuilder() {
 		builder = new WorkbookBuilder()
