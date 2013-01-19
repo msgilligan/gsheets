@@ -69,7 +69,7 @@ abstract class WorkbookBuilderSupport {
 		assert currentSheet
 
 		row()
-		if(values) {
+		if (values) {
 			values.eachWithIndex { value, index ->
 				cell value, index
 			}

@@ -1,8 +1,5 @@
 package org.gsheets
 
-import java.text.SimpleDateFormat
-
-import org.apache.poi.ss.formula.functions.T
 import org.apache.poi.ss.usermodel.Workbook
 
 class WorkbookBuilderSpec extends WorkbookBuilderSupportSpec {

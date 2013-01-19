@@ -11,7 +11,10 @@ ruleset {
 		exclude 'DuplicateStringLiteral'
 	}
 	ruleset('rulesets/exceptions.xml')
-	ruleset('rulesets/formatting.xml')
+	ruleset('rulesets/formatting.xml') {
+		exclude 'SpaceAfterOpeningBrace'
+		exclude 'SpaceBeforeClosingBrace'
+	}
 	ruleset('rulesets/generic.xml')
 	ruleset('rulesets/grails.xml')
 	ruleset('rulesets/groovyism.xml')
@@ -27,7 +30,9 @@ ruleset {
 			regex = /[a-z][\w\s'\(\)]*/
 		}
 	}	
-	ruleset('rulesets/security.xml')
+	ruleset('rulesets/security.xml') {
+		exclude 'JavaIoPackageAccess'
+	}
 	ruleset('rulesets/serialization.xml')
 	ruleset('rulesets/size.xml')
 	ruleset('rulesets/unnecessary.xml')

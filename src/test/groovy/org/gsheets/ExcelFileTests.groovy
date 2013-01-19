@@ -50,7 +50,7 @@ class ExcelFileTests {
 			data {
 				sheet('sheet') { 
 					header(headers) 
-					row(['ken', true, date, o, 13, 1/3, 13.267])
+					row(['ken', true, date, o, 13, 1 / 3, 13.267])
 					row([null])
 				}
 			}

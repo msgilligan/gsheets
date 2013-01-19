@@ -232,7 +232,7 @@ abstract class WorkbookBuilderSupportSpec extends Specification {
 	
 	static demospec = {
 		workbook {
-			def fmt = new SimpleDateFormat('yyyy-MM-dd')
+			def fmt = new SimpleDateFormat('yyyy-MM-dd', Locale.default)
 			sheet('sheet 1') {
 				row('Name', 'Date', 'Count', 'Value', 'Active')
 				row('a', fmt.parse('2012-09-12'), 69, 12.34, true)
@@ -245,7 +245,7 @@ abstract class WorkbookBuilderSupportSpec extends Specification {
 		Workbook workbook = builder.workbook demospec
 		
 		File file = new File(name)
-		if(!file.exists()) {
+		if (!file.exists()) {
 			file.createNewFile()
 		}
 		def out = new FileOutputStream(file)
