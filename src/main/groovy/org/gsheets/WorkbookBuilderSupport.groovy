@@ -26,9 +26,9 @@ abstract class WorkbookBuilderSupport {
 	/**
 	 * Provides the root of a Workbook DSL.
 	 *
-	 * @param the closure supports nested method calls
+	 * @param closure to support nested method calls
 	 * 
-	 * @return the Workbook
+	 * @return the created Workbook
 	 */
 	Workbook workbook(Closure closure) {
 		assert closure
@@ -41,7 +41,7 @@ abstract class WorkbookBuilderSupport {
 	/**
 	 * Builds a new Sheet.
 	 *
-	 * @param the closure supports nested method calls
+	 * @param closure to support nested method calls
 	 * 
 	 * @return the created Sheet
 	 */
@@ -51,62 +51,47 @@ abstract class WorkbookBuilderSupport {
 		assert closure
 
 		currentSheet = wb.createSheet(name)
-		assert currentSheet
 		closure.delegate = currentSheet
 		closure.call()
 		currentSheet
 	}
 
-	Row row() {
-		currentRow = currentSheet.createRow(nextRowNum++)		
-	}
-	
-	Row row(Object value) {
-		row([value])
-	}
-	
 	Row row(... values) {
-		assert currentSheet
-
-		row()
+		currentRow = currentSheet.createRow(nextRowNum++)		
 		if (values) {
-			values.eachWithIndex { value, index ->
-				cell value, index
+			values.eachWithIndex { value, column ->
+				cell value, column
 			}
 		}
 		currentRow
 	}
 	
-	Row row(List values) {
-		row(values.toArray())
+	Cell cell(String value, int column) {
+		createCell value, column, Cell.CELL_TYPE_STRING 
 	}
 	
-	Cell cell(String value, int index) {
-		cell value, index, Cell.CELL_TYPE_STRING 
+	Cell cell(Boolean value, int column) {
+		createCell value, column, Cell.CELL_TYPE_BOOLEAN
 	}
 	
-	Cell cell(Boolean value, int index) {
-		cell value, index, Cell.CELL_TYPE_BOOLEAN
+	Cell cell(Number value, int column) {
+		createCell value, column, Cell.CELL_TYPE_NUMERIC
 	}
 	
-	Cell cell(Number value, int index) {
-		cell value, index, Cell.CELL_TYPE_NUMERIC
+	Cell cell(Date date, int column) {
+		createCell date, column, Cell.CELL_TYPE_NUMERIC
 	}
 	
-	Cell cell(Date date, int index) {
-		cell date, index, Cell.CELL_TYPE_NUMERIC
+	Cell cell(Formula formula, int column) {
+		createCell formula.text, column, Cell.CELL_TYPE_FORMULA
 	}
 	
-	Cell cell(Formula formula, int index) {
-		cell formula.text, index, Cell.CELL_TYPE_FORMULA
+	Cell cell(value, int column) {
+		createCell value.toString(), column, Cell.CELL_TYPE_STRING
 	}
 	
-	Cell cell(value, int index) {
-		cell value.toString(), index, Cell.CELL_TYPE_STRING
-	}
-	
-	protected Cell cell(value, int index, int cellType) {
-		Cell cell = currentRow.createCell(index)
+	private Cell createCell(value, int column, int cellType) {
+		Cell cell = currentRow.createCell(column)
 		cell.cellType = cellType
 		cell.setCellValue(value)
 		cell
