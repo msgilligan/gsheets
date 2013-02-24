@@ -93,7 +93,7 @@ abstract class WorkbookBuilderSupportSpec extends Specification {
 		}
 		
 		then:
-		cell0(0) == null
+		fetchCell0(0) == null
 		fetchSheet().lastRowNum == 0
 	}
 	
@@ -107,8 +107,8 @@ abstract class WorkbookBuilderSupportSpec extends Specification {
 		}
 		
 		then:
-		cell0(0) == null
-		cell0(1) == null
+		fetchCell0(0) == null
+		fetchCell0(1) == null
 		fetchSheet().lastRowNum == 1
 	}
 	
@@ -121,7 +121,7 @@ abstract class WorkbookBuilderSupportSpec extends Specification {
 		}
 		
 		then:
-		cell0(0).stringCellValue == 's'
+		fetchCell0(0).stringCellValue == 's'
 	}
 	
 	def 'can build a Boolean cell'() {
@@ -134,8 +134,8 @@ abstract class WorkbookBuilderSupportSpec extends Specification {
 		}
 		
 		then:
-		cell0(0).booleanCellValue
-		!cell0(1).booleanCellValue
+		fetchCell0(0).booleanCellValue
+		!fetchCell0(1).booleanCellValue
 	}
 	
 	def 'can build a Double cell'() {
@@ -152,12 +152,12 @@ abstract class WorkbookBuilderSupportSpec extends Specification {
 		}
 		
 		then:
-		cell0(0).numericCellValue == 12.345D
-		cell0(1).numericCellValue == 13D
-		cell0(2).numericCellValue == 14.18D
-		that cell0(3).numericCellValue, closeTo(23.45D, 0.000001D)
-		cell0(4).numericCellValue == 123456789
-		cell0(5).numericCellValue == 123
+		fetchCell0(0).numericCellValue == 12.345D
+		fetchCell0(1).numericCellValue == 13D
+		fetchCell0(2).numericCellValue == 14.18D
+		that fetchCell0(3).numericCellValue, closeTo(23.45D, 0.000001D)
+		fetchCell0(4).numericCellValue == 123456789
+		fetchCell0(5).numericCellValue == 123
 	}
 	
 	def 'can build a Date cell'() {
@@ -172,7 +172,7 @@ abstract class WorkbookBuilderSupportSpec extends Specification {
 		}
 		
 		then:
-		cell0(0).dateCellValue == date
+		fetchCell0(0).dateCellValue == date
 	}
 	
 	def 'can build an object cell as a String'() {
@@ -187,7 +187,7 @@ abstract class WorkbookBuilderSupportSpec extends Specification {
 		}
 		
 		then:
-		cell0(0).stringCellValue == someObject.toString()
+		fetchCell0(0).stringCellValue == someObject.toString()
 
 	}
 	
@@ -244,7 +244,7 @@ abstract class WorkbookBuilderSupportSpec extends Specification {
 	
 	protected Cell fetchCell(Row row, cellNum) { row.getCell cellNum }
 
-	protected Cell cell0(rowNum) { fetchCell rowNum, 0 }
+	protected Cell fetchCell0(rowNum) { fetchCell rowNum, 0 }
 
 	protected Cell fetchCell(cellNum) { fetchCell builder.currentRow, cellNum }
 
