@@ -29,6 +29,7 @@ ruleset {
 		MethodName {
 			regex = /[a-z][\w\s'\(\)]*/
 		}
+		exclude 'FactoryMethodName'
 	}	
 	ruleset('rulesets/security.xml') {
 		exclude 'JavaIoPackageAccess'

@@ -34,7 +34,7 @@ abstract class WorkbookBuilderSupportSpec extends Specification {
 		}
 
 		then:
-		wb.numberOfSheets == 0
+		fetchWb().numberOfSheets == 0
 	}
 	
 	def 'can build a workbook with multiple sheets'() {
@@ -47,8 +47,41 @@ abstract class WorkbookBuilderSupportSpec extends Specification {
 		}
 		
 		then:
-		wb.getSheetAt(0).sheetName == 'sheet1'
-		wb.getSheetAt(1).sheetName == 'sheet2'
+		fetchWb().getSheetAt(0).sheetName == 'sheet1'
+		fetchWb().getSheetAt(1).sheetName == 'sheet2'
+	}
+	
+	def 'can build a single sheet directly into the workbook'() {
+		when:
+		builder.sheet('sheet1') {
+		}
+		
+		then:
+		fetchWb().getSheetAt(0).sheetName == 'sheet1'
+	}
+	
+	def 'can NOT build a row outside a sheet'() {
+		when:
+		builder.workbook {
+				row()
+		}
+		
+		then:
+		Exception x = thrown()
+		x.message == 'can NOT build a row outside a sheet'
+	}
+	
+	def 'can NOT build a cell outside a row'() {
+		when:
+		builder.workbook {
+			sheet('a') {
+				cell(true)
+			}
+		}
+		
+		then:
+		IllegalStateException x = thrown()
+		x.message == 'can NOT build a cell outside a row'
 	}
 	
 	def 'can build 1 empty row'() {
@@ -61,7 +94,7 @@ abstract class WorkbookBuilderSupportSpec extends Specification {
 		
 		then:
 		cell0(0) == null
-		sheet.lastRowNum == 0
+		fetchSheet().lastRowNum == 0
 	}
 	
 	def 'can build multiple rows'() {
@@ -76,7 +109,7 @@ abstract class WorkbookBuilderSupportSpec extends Specification {
 		then:
 		cell0(0) == null
 		cell0(1) == null
-		sheet.lastRowNum == 1
+		fetchSheet().lastRowNum == 1
 	}
 	
 	def 'can build a String cell'() {
@@ -170,10 +203,10 @@ abstract class WorkbookBuilderSupportSpec extends Specification {
 		}
 		
 		then:
-		cell(0, 0).numericCellValue == 13
-		cell(0, 1).numericCellValue == 3
-		cell(0, 2).stringCellValue == 'A1*B1'
-		cell(0, 2).cellType == Cell.CELL_TYPE_FORMULA
+		fetchCell(0, 0).numericCellValue == 13
+		fetchCell(0, 1).numericCellValue == 3
+		fetchCell(0, 2).stringCellValue == 'A1*B1'
+		fetchCell(0, 2).cellType == Cell.CELL_TYPE_FORMULA
 	}
 	
 	def 'can build multiple cells in a row'() {
@@ -185,9 +218,9 @@ abstract class WorkbookBuilderSupportSpec extends Specification {
 		}
 		
 		then:
-		cell(0, 0).numericCellValue == 13
-		cell(0, 1).stringCellValue == 'x'
-		cell(0, 2).booleanCellValue
+		fetchCell(0, 0).numericCellValue == 13
+		fetchCell(0, 1).stringCellValue == 'x'
+		fetchCell(0, 2).booleanCellValue
 	}
 	
 	def 'cannot build a row outside a sheet'() {
@@ -197,7 +230,8 @@ abstract class WorkbookBuilderSupportSpec extends Specification {
 		}
 		
 		then:
-		thrown(NullPointerException)
+		IllegalStateException x = thrown()
+		x.message == 'can NOT build a row outside a sheet'
 	}
 	
 	static class SomeClass {
@@ -206,29 +240,17 @@ abstract class WorkbookBuilderSupportSpec extends Specification {
 		}
 	}
 	
-	protected Cell cell(rowNum, cellNum) {
-		cell(builder.currentSheet.getRow(rowNum), cellNum)
-	}
+	protected Cell fetchCell(rowNum, cellNum) { fetchCell(builder.currentSheet.getRow(rowNum), cellNum) }
 	
-	protected Cell cell(Row row, cellNum) {
-		row.getCell cellNum
-	}
+	protected Cell fetchCell(Row row, cellNum) { row.getCell cellNum }
 
-	protected Cell cell0(rowNum) {
-		cell rowNum, 0
-	}
+	protected Cell cell0(rowNum) { fetchCell rowNum, 0 }
 
-	protected Cell cell(cellNum) {
-		cell builder.currentRow, cellNum
-	}
+	protected Cell fetchCell(cellNum) { fetchCell builder.currentRow, cellNum }
 
-	protected Workbook getWb() {
-		builder.wb
-	}
+	protected Workbook fetchWb() { builder.wb }
 	
-	protected Sheet getSheet() {
-		builder.currentSheet
-	}
+	protected Sheet fetchSheet() { builder.currentSheet }
 	
 	static demospec = {
 		workbook {
