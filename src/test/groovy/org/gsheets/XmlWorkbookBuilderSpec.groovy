@@ -1,13 +1,13 @@
 package org.gsheets
 
-class XmlWorkbookBuilderSpec extends WorkbookBuilderSupportSpec {
+class XmlWorkbookBuilderSpec extends WorkbookBuilderSpec {
 
-	protected WorkbookBuilderSupport newBuilder() {
-		builder = new XmlWorkbookBuilder()
+	protected newBuilder() {
+		new WorkbookBuilder(true)
 	}
 	
 	static void main(String[] args) {
-		file 'demo.xlsx', new XmlWorkbookBuilder()
+		file 'demo.xlsx', new XmlWorkbookBuilderSpec().newBuilder()
 	}
 	
 }
