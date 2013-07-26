@@ -1,7 +1,5 @@
 package org.gsheets.parsing
 
-import java.util.Map;
-
 import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.ss.usermodel.Row
 import org.apache.poi.ss.usermodel.Sheet
@@ -10,22 +8,32 @@ import org.gsheets.NonXmlWorkbookSupport
 import org.gsheets.WorkbookSupport
 import org.gsheets.XmlWorkbookSupport
 
+/**
+ * Provides basic support for parsing a grid of data from xml or non-xml spreadsheets.
+ * 
+ * @author Ken Krebs 
+ */
 class WorkbookParser {
 
 	private final WorkbookSupport support
 	
 	Workbook workbook
 	
-	int rows
-	
 	int startRowIndex
 	
-	Map columns = [:]
+	Map columnMap = [:]
 	
 	WorkbookParser(boolean xml) {
 		support = xml ? new XmlWorkbookSupport() : new NonXmlWorkbookSupport()
 	}
 	
+	/**
+	 * Parses a grid of data from the provided Workbook.
+	 * 
+	 * @param workbook to be parsed
+	 * @param closure declares a parsing strategy
+	 * @return a List of data Maps
+	 */
 	List<Map> grid(Workbook workbook, Closure closure) {
 		assert workbook
 		assert closure
@@ -39,22 +47,25 @@ class WorkbookParser {
 	
 	void header(int rows) { startRowIndex = rows }
 	
-	void columns(Map columns) { this.columns = columns }
+	void columns(Map columns) { columnMap = columns }
 	
 	private List<Map> data(Workbook workbook) {
 		List data = []
 		Sheet sheet = workbook.getSheetAt(0)
+		int rows = sheet.physicalNumberOfRows - startRowIndex
 		rows.times {
 			Row row = sheet.getRow(it + startRowIndex)
-			Map rowData = rowData(row)
-			data << rowData
+			if (row) {
+				Map rowData = rowData(row)
+				data << rowData
+			}
 		}
 		data
 	}
 	
 	private Map rowData(Row row) {
 		Map data = [:]
-		columns.eachWithIndex { name, type, index ->
+		columnMap.eachWithIndex { name, type, index ->
 			Cell cell = row.getCell(index)
 			def cellData
 			if (type == String) { cellData = cellAsString(cell) }

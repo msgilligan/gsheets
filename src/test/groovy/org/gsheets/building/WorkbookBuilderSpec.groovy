@@ -270,7 +270,7 @@ abstract class WorkbookBuilderSpec extends Specification {
 		if (!file.exists()) {
 			file.createNewFile()
 		}
-		def out = new FileOutputStream(file)
+		OutputStream out = new FileOutputStream(file)
 		workbook.write out
 		out.close()
 	}

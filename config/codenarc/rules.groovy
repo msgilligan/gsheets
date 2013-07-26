@@ -28,7 +28,9 @@ ruleset {
 		exclude 'JUnitStyleAssertions'
 		exclude 'JUnitSetUpCallsSuper'
 	}
-	ruleset('rulesets/logging.xml')
+	ruleset('rulesets/logging.xml') {
+		exclude 'Println'
+	}
 	ruleset('rulesets/naming.xml') {
 		MethodName {
 			regex = /[a-z][\w\s'\(\)]*/

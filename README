@@ -1,30 +1,46 @@
 kktec/gsheets is based on code forked from andresteingress/gsheets and is a Groovy DSL wrapper over Apache POI.
 
-0.3 Includes basic grid parsing functionality for declaratively reading spreadsheets.
+The original code, ExcelFile, does not support xml spreadsheets and is provided as a convenience.
+
+0.3 Includes basic grid parsing functionality for declaratively reading spreadsheets. 
+It assumes a simple grid on the first worksheet originating at rowIndex 0 and columnIndex 0.
 
 Plans as of 2013-07 include enhanced parsing with error reporting and integration tests, additional spreadsheet building features, and better documentation.
 
-Check the tests for more complete examples of usage.
+Check the tests for more complete examples of usage. There are main methods on the tests that can be used to demonstrate building and parsing spreadsheets.
 
 
 
-A simple example of a building Closure populates a Workbook with 1 Sheet 3 rows of 4 columns:
+A simple example of a building Closure that populates a Workbook with 1 Sheet 3 rows of 4 columns:
 
-workbook {
-	def fmt = new SimpleDateFormat('yyyy-MM-dd', Locale.default)
-	sheet('sheet 1') {
-		row('Name', 'Date', 'Count', 'Value', 'Active')
-		row('a', fmt.parse('2012-09-12'), 69, 12.34, true)
-		row('b', fmt.parse('2012-09-13'), 666, 43.21, false)
-	}
+Workbook workbook = builder.workbook {
+	workbook {
+		def fmt = new SimpleDateFormat('yyyy-MM-dd', Locale.default)
+		sheet('sheet 1') {
+			row('Name', 'Date', 'Count', 'Value', 'Active')
+			row('a', fmt.parse('2012-09-12'), 69, 12.34, true)
+			row('b', fmt.parse('2012-09-13'), 666, 43.21, false)
+		}
+	}	
 }
 
+File file = new File(name)
+if (!file.exists()) {
+	file.createNewFile()
+}
+OutputStream out = new FileOutputStream(file)
+workbook.write out
+out.close()
 
 
-A simple example of a parsing Closure that pulls in 2 rows with columns of various simple types as List of Maps:
 
-{
-	rows = 2
-	columns abbreviation: String, cost: BigDecimal, num: Integer, status: Boolean, irr: Double, flt: Float, date: Date, lng: Long
+
+A simple example of a parsing Closure that pulls in all physically existing rows, disregarding header rows, with columns of various simple types as a List of Maps:
+
+FileInputStream ins = new FileInputStream('demo.xlsx')
+Workbook workbook = new XSSFWorkbook(ins)
+WorkbookParser parser = new WorkbookParser(true) // true for xml
+List data = parser.grid(workbook) {
+	columns name: String, date: Date, count: Integer, value: BigDecimal, active: Boolean
 }
  

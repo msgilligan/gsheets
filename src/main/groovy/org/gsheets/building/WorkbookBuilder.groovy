@@ -9,6 +9,7 @@ import org.gsheets.WorkbookSupport
 import org.gsheets.XmlWorkbookSupport
 
 /**
+ * Provides basic support for building xml or non-xml spreadsheets.
  * 
  * @author Ken Krebs 
  */

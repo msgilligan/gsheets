@@ -20,14 +20,6 @@ abstract class WorkbookParserSpec extends Specification {
 		builder = newBuilder()
 	}
 	
-	def 'has a row count'() {
-		expect: parser.rows == 0
-		
-		when: parser.rows = 2
-		
-		then: parser.rows == 2
-	}
-
 	def 'has a startRowIndex'() {
 		expect: parser.startRowIndex == 0
 		
@@ -38,10 +30,10 @@ abstract class WorkbookParserSpec extends Specification {
 	
 	def 'has column Map of names to typeConvertors'() {
 		when:
-		parser.columns = [x: String]
+		parser.columnMap = [x: String]
 		
 		then:
-		parser.columns.x == String
+		parser.columnMap.x == String
 	}
 
 	def 'can parse a grid without a header of simple types originating from row 0 column 0 from the first worksheet'() {
@@ -57,7 +49,6 @@ abstract class WorkbookParserSpec extends Specification {
 		
 		when: 'columns are Maps of String to type'
 		List data = parser.grid(builder.wb) {
-			rows = 2
 			columns abbreviation: String, cost: BigDecimal, num: Integer, status: Boolean, irr: Double, flt: Float, date: Date, lng: Long
 		}
 		
@@ -86,7 +77,6 @@ abstract class WorkbookParserSpec extends Specification {
 		when: 'columns are Maps of String to type'
 		List data = parser.grid(builder.wb) {
 			header 2
-			rows = 2
 			columns abbreviation: String, cost: BigDecimal, num: Integer, status: Boolean, irr: Double, flt: Float, date: Date, lng: Long
 		}
 		
@@ -96,8 +86,9 @@ abstract class WorkbookParserSpec extends Specification {
 			[abbreviation: 'a', cost: 12.34, num: 13, status: true, irr: 3.14159D, flt: 2.345F, date: date1, lng: 123456789L],
 			[abbreviation: 'b', cost: -98.62, num: -69, status: false, irr: 2.71821828D, flt: 13.01F, date: date2, lng: 999999999999999L],
 		]
-		
 	}
 
-
+	def 'can partially parse a grid with not enough rows'() {
+		
+	}
 }
