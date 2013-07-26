@@ -1,4 +1,4 @@
-package org.gsheets
+package org.gsheets.building
 
 import groovy.transform.Canonical
 

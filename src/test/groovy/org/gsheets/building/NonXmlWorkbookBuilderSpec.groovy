@@ -1,4 +1,4 @@
-package org.gsheets
+package org.gsheets.building
 
 import org.apache.poi.ss.usermodel.Workbook
 
@@ -9,7 +9,7 @@ class NonXmlWorkbookBuilderSpec extends WorkbookBuilderSpec {
 	}
 	
 	static void main(String[] args) {
-		file 'demo.xls', new NonXmlWorkbookSupport().newBuilder()
+		file 'demo.xls', new NonXmlWorkbookBuilderSpec().newBuilder()
 	}
 	
 }

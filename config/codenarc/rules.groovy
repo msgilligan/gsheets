@@ -14,6 +14,10 @@ ruleset {
 	ruleset('rulesets/formatting.xml') {
 		exclude 'SpaceAfterOpeningBrace'
 		exclude 'SpaceBeforeClosingBrace'
+		LineLength {
+			length = 140
+		}
+		
 	}
 	ruleset('rulesets/generic.xml')
 	ruleset('rulesets/grails.xml')

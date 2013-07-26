@@ -1,3 +1,30 @@
-kktec/gsheets is based on code forked from andresteingress/gsheets and is a wrapper over Apache POI.
+kktec/gsheets is based on code forked from andresteingress/gsheets and is a Groovy DSL wrapper over Apache POI.
 
-Plans as of 2013-07 include a parser for declaratively reading spreadsheets and additional spreadsheet building features.
+0.3 Includes basic grid parsing functionality for declaratively reading spreadsheets.
+
+Plans as of 2013-07 include enhanced parsing with error reporting and integration tests, additional spreadsheet building features, and better documentation.
+
+Check the tests for more complete examples of usage.
+
+
+
+A simple example of a building Closure populates a Workbook with 1 Sheet 3 rows of 4 columns:
+
+workbook {
+	def fmt = new SimpleDateFormat('yyyy-MM-dd', Locale.default)
+	sheet('sheet 1') {
+		row('Name', 'Date', 'Count', 'Value', 'Active')
+		row('a', fmt.parse('2012-09-12'), 69, 12.34, true)
+		row('b', fmt.parse('2012-09-13'), 666, 43.21, false)
+	}
+}
+
+
+
+A simple example of a parsing Closure that pulls in 2 rows with columns of various simple types as List of Maps:
+
+{
+	rows 2
+	columns abbreviation: String, cost: BigDecimal, num: Integer, status: Boolean, irr: Double, flt: Float, date: Date, lng: Long
+}
+ 

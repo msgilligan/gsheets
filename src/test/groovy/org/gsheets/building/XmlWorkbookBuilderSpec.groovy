@@ -1,4 +1,4 @@
-package org.gsheets
+package org.gsheets.building
 
 class XmlWorkbookBuilderSpec extends WorkbookBuilderSpec {
 

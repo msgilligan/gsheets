@@ -1,4 +1,4 @@
-package org.gsheets
+package org.gsheets.building
 
 import static org.hamcrest.Matchers.*
 import static spock.util.matcher.HamcrestSupport.*

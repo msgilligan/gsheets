@@ -1,9 +1,12 @@
-package org.gsheets
+package org.gsheets.building
 
 import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.ss.usermodel.Row
 import org.apache.poi.ss.usermodel.Sheet
 import org.apache.poi.ss.usermodel.Workbook
+import org.gsheets.NonXmlWorkbookSupport
+import org.gsheets.WorkbookSupport
+import org.gsheets.XmlWorkbookSupport
 
 /**
  * 
@@ -11,7 +14,7 @@ import org.apache.poi.ss.usermodel.Workbook
  */
 class WorkbookBuilder {
 	
-	WorkbookSupport support
+	private final WorkbookSupport support
 
 	Workbook wb
 	Sheet currentSheet
