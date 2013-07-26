@@ -24,7 +24,7 @@ workbook {
 A simple example of a parsing Closure that pulls in 2 rows with columns of various simple types as List of Maps:
 
 {
-	rows 2
+	rows = 2
 	columns abbreviation: String, cost: BigDecimal, num: Integer, status: Boolean, irr: Double, flt: Float, date: Date, lng: Long
 }
  

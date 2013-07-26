@@ -1,5 +1,7 @@
 package org.gsheets.parsing
 
+import java.util.Map;
+
 import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.ss.usermodel.Row
 import org.apache.poi.ss.usermodel.Sheet
@@ -14,10 +16,12 @@ class WorkbookParser {
 	
 	Workbook workbook
 	
-	Grid gridConfig = new Grid()
+	int rows
 	
-	List gridData
-
+	int startRowIndex
+	
+	Map columns = [:]
+	
 	WorkbookParser(boolean xml) {
 		support = xml ? new XmlWorkbookSupport() : new NonXmlWorkbookSupport()
 	}
@@ -30,20 +34,18 @@ class WorkbookParser {
 		closure.delegate = this
 		closure.call()
 		
-		gridData = data(workbook)
+		data(workbook)
 	}
 	
-	void header(int rows) { gridConfig.header(rows) }
+	void header(int rows) { startRowIndex = rows }
 	
-	void rows(int rows) { gridConfig.rows = rows }
-	
-	void columns(Map columns) { gridConfig.columns = columns }
+	void columns(Map columns) { this.columns = columns }
 	
 	private List<Map> data(Workbook workbook) {
 		List data = []
 		Sheet sheet = workbook.getSheetAt(0)
-		gridConfig.rows.times {
-			Row row = sheet.getRow(it + gridConfig.startRow)
+		rows.times {
+			Row row = sheet.getRow(it + startRowIndex)
 			Map rowData = rowData(row)
 			data << rowData
 		}
@@ -52,7 +54,7 @@ class WorkbookParser {
 	
 	private Map rowData(Row row) {
 		Map data = [:]
-		gridConfig.columns.eachWithIndex { name, type, index ->
+		columns.eachWithIndex { name, type, index ->
 			Cell cell = row.getCell(index)
 			def cellData
 			if (type == String) { cellData = cellAsString(cell) }
