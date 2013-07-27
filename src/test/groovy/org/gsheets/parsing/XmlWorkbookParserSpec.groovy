@@ -11,7 +11,7 @@ class XmlWorkbookParserSpec extends WorkbookParserSpec {
 	protected WorkbookBuilder newBuilder() { new WorkbookBuilder(true) }
 	
 	static void main(String[] args) {
-		FileInputStream ins = new FileInputStream('demo.xlsx')
+		FileInputStream ins = new FileInputStream('demo.xlxs')
 		Workbook workbook = new XSSFWorkbook(ins)
 		WorkbookParser parser = new WorkbookParser(workbook)
 		println parser.grid {

@@ -14,10 +14,7 @@ ruleset {
 	ruleset('rulesets/formatting.xml') {
 		exclude 'SpaceAfterOpeningBrace'
 		exclude 'SpaceBeforeClosingBrace'
-		LineLength {
-			length = 140
-		}
-		
+		LineLength { length = 140 }
 	}
 	ruleset('rulesets/generic.xml')
 	ruleset('rulesets/grails.xml')
@@ -32,9 +29,7 @@ ruleset {
 		exclude 'Println'
 	}
 	ruleset('rulesets/naming.xml') {
-		MethodName {
-			regex = /[a-z][\w\s'\(\)]*/
-		}
+		MethodName { regex = /[a-z][\w\s'\(\)#:]*/ }
 		exclude 'FactoryMethodName'
 	}	
 	ruleset('rulesets/security.xml') {

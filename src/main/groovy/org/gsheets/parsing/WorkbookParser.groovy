@@ -63,6 +63,7 @@ class WorkbookParser {
 		data
 	}
 	
+	// TODO: refactor used named convertors instead of types - allowing users to register /replace them
 	private Map rowData(Row row) {
 		Map data = [:]
 		columnMap.eachWithIndex { name, type, index ->
@@ -91,7 +92,7 @@ class WorkbookParser {
 	
 	private Float cellAsFloat(Cell cell) { cellAsDouble(cell).floatValue() }
 	
-	private Long cellAsLong(Cell cell) { cellAsBigDecimal(cell).longValue() }
+	private Long cellAsLong(Cell cell) {  cellAsBigDecimal(cell).longValue() }
 	
 	private Integer cellAsInteger(Cell cell) { cellAsBigDecimal(cell).intValue() }
 	

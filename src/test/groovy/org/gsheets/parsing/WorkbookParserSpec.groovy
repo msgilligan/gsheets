@@ -4,6 +4,7 @@ import org.apache.poi.ss.usermodel.Workbook
 import org.gsheets.building.WorkbookBuilder
 
 import spock.lang.Specification
+import spock.lang.Unroll
 
 abstract class WorkbookParserSpec extends Specification {
 
@@ -15,9 +16,7 @@ abstract class WorkbookParserSpec extends Specification {
 	
 	abstract protected WorkbookBuilder newBuilder()
 	
-	def setup() {
-		builder = newBuilder()
-	}
+	def setup() { builder = newBuilder() }
 	
 	def 'has a startRowIndex'() {
 		given:
@@ -41,7 +40,7 @@ abstract class WorkbookParserSpec extends Specification {
 		then: parser.columnMap.x == String
 	}
 
-	def 'can parse a grid without a header of simple types originating from row 0 column 0 from the first worksheet'() {
+	def 'can parse a grid without header rows of simple types originating from row 0 column 0 from the first worksheet'() {
 		given:
 		Date date1 = new Date()
 		Date date2 = new Date(date1.time + 1000 * 60 * 60 * 24)
@@ -67,6 +66,30 @@ abstract class WorkbookParserSpec extends Specification {
 		
 	}
 
+	@Unroll
+	def 'from parsed grid: #a plus #b equals #c'() {
+		expect:
+		a + b == c
+		
+		where:
+		row << abcData()
+		a = row.a
+		b = row.b
+		c = row.c
+	}
+	
+	private List abcData() {
+		setup()
+		builder.workbook {
+			sheet('a sheet') {
+				row 2, 4, 6
+				row 23, 46, 69
+			}
+		}
+		
+		newParser(builder.wb).grid { columns a: Integer, b: Integer, c: Integer }
+	}
+	
 	def 'can parse a grid with ignored header rows of simple types originating from row 0 column 0 from the first worksheet'() {
 		given:
 		Date date1 = new Date()
