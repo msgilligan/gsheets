@@ -14,7 +14,7 @@ codenarc {
 
 defaultTasks 'clean', 'build', 'groovydoc'
 
-version='0.3'
+version = '0.3'
 
 repositories {
     mavenCentral()

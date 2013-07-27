@@ -11,12 +11,25 @@ import org.apache.poi.ss.usermodel.Workbook
  * @author Ken Krebs 
  */
 class WorkbookParser {
+	
+	// TODO: add error reporting and failOnErrors property
 
-	Workbook workbook
+	private final Workbook workbook
 	
-	int startRowIndex
+	private int startRowIndex
 	
-	Map columnMap = [:]
+	private Map columnMap = [:]
+	
+	private final Map convertors = [
+		string: this.&cellAsString,
+		decimal: this.&cellAsBigDecimal,
+		'int': this.&cellAsInteger,
+		'boolean': this.&cellAsBoolean,
+		'double': this.&cellAsDouble,
+		'float': this.&cellAsFloat,
+		date: this.&cellAsDate,
+		'long': this.&cellAsLong,
+	]
 	
 	/**
 	 * Constructs a WorkbookParser.
@@ -45,9 +58,28 @@ class WorkbookParser {
 		data(workbook)
 	}
 	
+	/**
+	 * Sets the no. of header rows to skip when parsing a grid.
+	 * 
+	 * @param rows
+	 */
 	void headerRows(int rows) { startRowIndex = rows }
 	
+	/**
+	 * Sets the column data extraction strategy. Columns are processed in order.
+	 * 'skip' is a special strategy that skips over a column.
+	 * 
+	 * @param columns LinkedHashMap of column names to convertor names
+	 */
 	void columns(Map columns) { columnMap = columns }
+	
+	/**
+	 * Adds or replaces a convertor.
+	 * 
+	 * @param name of the convertor
+	 * @param convertor Closure that extracts data from a Cell
+	 */
+	void convertor(String name, Closure convertor) { convertors[name] = convertor }
 	
 	private List<Map> data(Workbook workbook) {
 		List data = []
@@ -55,29 +87,22 @@ class WorkbookParser {
 		int rows = sheet.physicalNumberOfRows - startRowIndex
 		rows.times {
 			Row row = sheet.getRow(it + startRowIndex)
-			if (row) {
-				Map rowData = rowData(row)
-				data << rowData
-			}
+			if (row) { data << rowData(row) }
 		}
 		data
 	}
 	
-	// TODO: refactor used named convertors instead of types - allowing users to register /replace them
 	private Map rowData(Row row) {
 		Map data = [:]
-		columnMap.eachWithIndex { name, type, index ->
+		columnMap.eachWithIndex { column, name, index ->
 			Cell cell = row.getCell(index)
-			def cellData
-			if (type == String) { cellData = cellAsString(cell) }
-			else if (type == BigDecimal) { cellData = cellAsBigDecimal(cell) }
-			else if (type == Double) { cellData = cellAsDouble(cell) }
-			else if (type == Float) { cellData = cellAsFloat(cell) }
-			else if (type == Long) { cellData = cellAsLong(cell) }
-			else if (type == Integer) { cellData = cellAsInteger(cell) }
-			else if (type == Boolean) { cellData = cellAsBoolean(cell) }
-			else if (type == Date) { cellData = cellAsDate(cell) }
-			data[name] = cellData
+			if (name != 'skip') {
+				Closure convertor = convertors[name]
+				if (convertor) { data[column] = convertor cell }
+				else { 
+					throw new IllegalArgumentException("$name is not a supported convertor for column $column")
+				}
+			}
 		}
 		data
 	}

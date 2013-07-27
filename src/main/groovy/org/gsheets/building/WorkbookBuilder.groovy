@@ -66,7 +66,9 @@ class WorkbookBuilder {
 		currentSheet
 	}
 
-	Row row(... values) {
+	Row row(... values) { row(values as List) }
+	
+	Row row(Iterable values) {
 		if (!currentSheet) { throw new IllegalStateException('can NOT build a row outside a sheet') }
 		
 		currentRow = currentSheet.createRow(nextRowNum++)		
