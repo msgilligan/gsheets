@@ -4,9 +4,6 @@ import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.ss.usermodel.Row
 import org.apache.poi.ss.usermodel.Sheet
 import org.apache.poi.ss.usermodel.Workbook
-import org.gsheets.NonXmlWorkbookSupport
-import org.gsheets.WorkbookSupport
-import org.gsheets.XmlWorkbookSupport
 
 /**
  * Provides basic support for parsing a grid of data from xml or non-xml spreadsheets.
@@ -15,37 +12,40 @@ import org.gsheets.XmlWorkbookSupport
  */
 class WorkbookParser {
 
-	private final WorkbookSupport support
-	
 	Workbook workbook
 	
 	int startRowIndex
 	
 	Map columnMap = [:]
 	
-	WorkbookParser(boolean xml) {
-		support = xml ? new XmlWorkbookSupport() : new NonXmlWorkbookSupport()
+	/**
+	 * Constructs a WorkbookParser.
+	 * 
+	 * @param workbook to be parsed
+	 */
+	WorkbookParser(Workbook workbook) {
+		assert workbook
+		
+		this.workbook = workbook
 	}
 	
 	/**
 	 * Parses a grid of data from the provided Workbook.
 	 * 
-	 * @param workbook to be parsed
 	 * @param closure declares a parsing strategy
+	 * 
 	 * @return a List of data Maps
 	 */
-	List<Map> grid(Workbook workbook, Closure closure) {
-		assert workbook
+	List<Map> grid(Closure closure) {
 		assert closure
 		
-		this.workbook = workbook
 		closure.delegate = this
 		closure.call()
 		
 		data(workbook)
 	}
 	
-	void header(int rows) { startRowIndex = rows }
+	void headerRows(int rows) { startRowIndex = rows }
 	
 	void columns(Map columns) { columnMap = columns }
 	

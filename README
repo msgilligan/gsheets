@@ -11,7 +11,7 @@ Check the tests for more complete examples of usage. There are main methods on t
 
 
 
-A simple example of a building Closure that populates a Workbook with 1 Sheet 3 rows of 4 columns:
+A simple example of building a Workbook with a Sheet with 1 header row and 3 data rows of 4 columns:
 
 Workbook workbook = builder.workbook {
 	workbook {
@@ -39,8 +39,9 @@ A simple example of a parsing Closure that pulls in all physically existing rows
 
 FileInputStream ins = new FileInputStream('demo.xlsx')
 Workbook workbook = new XSSFWorkbook(ins)
-WorkbookParser parser = new WorkbookParser(true) // true for xml
-List data = parser.grid(workbook) {
+WorkbookParser parser = new WorkbookParser(workbook)
+List data = parser.grid {
+    headerRows 1
 	columns name: String, date: Date, count: Integer, value: BigDecimal, active: Boolean
 }
  
