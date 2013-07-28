@@ -3,12 +3,13 @@ package org.gsheets.parsing
 import org.apache.poi.ss.usermodel.Workbook
 import org.gsheets.building.WorkbookBuilder
 
+import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
 
 abstract class WorkbookParserSpec extends Specification {
 
-	WorkbookParser parser
+	@Shared WorkbookParser parser
 	
 	WorkbookBuilder builder
 	
@@ -18,8 +19,8 @@ abstract class WorkbookParserSpec extends Specification {
 	
 	Date date1 = new Date()
 	Date date2 = new Date(date1.time + 1000 * 60 * 60 * 24)
-	List rowA = ['a', 'rubbish', 12.34, 13, true, 3.14159D, 2.345F, date1, 123456789L]
-	List rowB = ['b', 'garbage', -98.62, -69, false, 2.71821828D, 13.01F, date2, 999999999999999L]
+	List rowA = ['a', 'rubbish', 12.34, 13I, true, 3.14159D, 2.345F, date1, 123456789L]
+	List rowB = ['b', 'garbage', -98.62, -69I, false, 2.71821828D, 13.01F, date2, 999999999999999L]
 	Map mapA = [
 		abbreviation: 'a', cost: 12.34, num: 13, status: true,
 		irr: 3.14159D, flt: 2.345F, date: date1, lng: 123456789L
@@ -55,12 +56,14 @@ abstract class WorkbookParserSpec extends Specification {
 		
 		then:
 		data == [mapA, mapB]
+		!parser.errors
 	}
 
 	@Unroll
 	def 'from parsed grid: #a plus #b equals #c'() {
 		expect:
 		a + b == c
+		!parser.errors
 		
 		where:
 		row << abcData()
@@ -77,8 +80,8 @@ abstract class WorkbookParserSpec extends Specification {
 				row 23, 46, 69
 			}
 		}
-		
-		newParser(builder.wb).grid { columns a: 'int', b: 'int', c: 'int' }
+		parser = newParser(builder.wb)
+		parser.grid { columns a: 'int', b: 'int', c: 'int' }
 	}
 	
 	def 'can parse a grid with ignored header rows of simple types'() {
@@ -105,9 +108,10 @@ abstract class WorkbookParserSpec extends Specification {
 		
 		then:
 		data == [mapA, mapB]
+		!parser.errors
 	}
 	
-	def 'can NOT parse a grid with an unsupported or unknown conversion'() {
+	def 'parsing a grid fails fast with an unsupported conversion'() {
 		given:
 		builder.workbook { 
 			sheet('a') {
@@ -124,7 +128,7 @@ abstract class WorkbookParserSpec extends Specification {
 		x.message == 'map is not a supported convertor for column y'
 	}
 	
-	def 'can parse using a custom convertor'() {
+	def 'can parse a grid using a custom cell convertor'() {
 		given:
 		builder.workbook {
 			sheet('special') {
@@ -142,6 +146,38 @@ abstract class WorkbookParserSpec extends Specification {
 		
 		then:
 		data == [[x: 'SOMETHING'], [x: 'ELSE']]
+		!parser.errors
+	}
+	
+	def 'can report parsing errors on individual cells'() {
+		given:
+		builder.workbook {
+			sheet('special') {
+				row 'Thingy', 'Integer', 'Status'
+				row 'thing', 3, 'ok'
+				row 'something', 'notAnInt', 'bad'
+				row 'athing', 13, 'a-ok'
+			}
+		}
+		parser = newParser(builder.wb)
+		
+		when:
+		List data = parser.grid {
+			headerRows 1
+			columns x: 'string', y: 'int', z: 'string'
+		}
+		
+		then:
+		data == [
+			[x: 'thing', y: 3, z: 'ok'],
+			[x: 'something', y: null, z: 'bad'],
+			[x: 'athing', y: 13, z: 'a-ok'],
+		]
+		parser.errors.size() == 1
+		parser.errors[0] == [
+			rowIndex: 2, columnIndex: 1, column: 'y',
+			error: 'java.lang.NumberFormatException', value: 'notAnInt'
+		]
 	}
 
 }

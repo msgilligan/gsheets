@@ -20,6 +20,8 @@ class WorkbookParser {
 	
 	private Map columnMap = [:]
 	
+	private final List errors = []
+	
 	private final Map convertors = [
 		string: this.&cellAsString,
 		decimal: this.&cellAsBigDecimal,
@@ -44,10 +46,14 @@ class WorkbookParser {
 	
 	/**
 	 * Parses a grid of data from the provided Workbook.
+	 * Cell data extraction are collected in a List named errors which will be empty if there none.
+	 * Application code may check this list to determine how to deal with it.
 	 * 
 	 * @param closure declares a parsing strategy
 	 * 
 	 * @return a List of data Maps
+	 * 
+	 * @throws IllegalArgumentException for unsupported conversions
 	 */
 	List<Map> grid(Closure closure) {
 		assert closure
@@ -98,7 +104,14 @@ class WorkbookParser {
 			Cell cell = row.getCell(index)
 			if (name != 'skip') {
 				Closure convertor = convertors[name]
-				if (convertor) { data[column] = convertor cell }
+				if (convertor) {
+					try { 
+						data[column] = convertor cell
+					} catch (Exception e) {
+						data[column] = null
+						errors << [rowIndex: row.rowNum, columnIndex: index, column: column, error: e.toString(), value: cell.toString()]
+					}
+				}
 				else { 
 					throw new IllegalArgumentException("$name is not a supported convertor for column $column")
 				}

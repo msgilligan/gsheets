@@ -10,7 +10,9 @@ ruleset {
 		exclude 'DuplicateMapLiteral'
 		exclude 'DuplicateStringLiteral'
 	}
-	ruleset('rulesets/exceptions.xml')
+	ruleset('rulesets/exceptions.xml') {
+		exclude 'CatchException'
+	}
 	ruleset('rulesets/formatting.xml') {
 		exclude 'SpaceAfterOpeningBrace'
 		exclude 'SpaceBeforeClosingBrace'
