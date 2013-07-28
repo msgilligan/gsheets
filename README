@@ -47,9 +47,10 @@ List data = parser.grid {
     headerRows 1
 	columns name: String, date: Date, count: Integer, value: BigDecimal, active: Boolean
 }
+ins.close()
 
-If you don't like a provided conversion or need a new one, you can replace an existing one or provide a new one by adding a line to your parsing Closure:
-    convertor('toUpper') { it.toString().toUpperCase() }
+If you don't like a provided conversion or need a new one, you can replace an existing one or provide a new one by adding a line to your parsing Closure, i.e.:
+    convertor('toUpper') { Cell cell -> cell.toString().toUpperCase() }
 
-As to error handling, parsing will fail fast on an unsupported conversion or collect a List of individual cell data conversion errors. 
+As to error handling, parsing will collect a List of individual cell data conversion errors. It will also fail fast on an unsupported conversion. 
  

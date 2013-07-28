@@ -10,6 +10,7 @@ class NonXmlWorkbookParserSpec extends WorkbookParserSpec {
 	
 	protected WorkbookBuilder newBuilder() { new WorkbookBuilder(false) }
 	
+	// Note: run the corresponding builder spec as an app first to create the file 
 	static void main(String[] args) {
 		FileInputStream ins = new FileInputStream('demo.xls')
 		Workbook workbook = new HSSFWorkbook(ins)

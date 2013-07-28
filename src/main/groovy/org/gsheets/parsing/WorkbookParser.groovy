@@ -12,8 +12,6 @@ import org.apache.poi.ss.usermodel.Workbook
  */
 class WorkbookParser {
 	
-	// TODO: add error reporting and failOnErrors property
-
 	private final Workbook workbook
 	
 	private int startRowIndex
