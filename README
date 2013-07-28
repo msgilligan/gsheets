@@ -8,7 +8,7 @@ The original code, ExcelFile, does not support xml spreadsheets and is provided 
 
 It assumes a simple grid on the first worksheet originating at rowIndex 0 and columnIndex 0, but this will probably be expanded to support use arbitrary worksheets and grid placement.
 
-Plans as of 2013-07 include enhanced parsing with error reporting and integration tests, additional spreadsheet building features, and better documentation.
+Plans as of 2013-07 include enhanced parsing integration tests, additional spreadsheet building features, and better documentation.
 
 Check the tests for more complete examples of usage. There are main methods on the tests that can be used to demonstrate building and parsing spreadsheets.
 

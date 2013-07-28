@@ -11,12 +11,12 @@ class XmlWorkbookParserSpec extends WorkbookParserSpec {
 	protected WorkbookBuilder newBuilder() { new WorkbookBuilder(true) }
 	
 	static void main(String[] args) {
-		FileInputStream ins = new FileInputStream('demo.xlxs')
+		FileInputStream ins = new FileInputStream('demo.xlsx')
 		Workbook workbook = new XSSFWorkbook(ins)
 		WorkbookParser parser = new WorkbookParser(workbook)
 		println parser.grid {
 			headerRows 1
-			columns name: String, date: Date, count: Integer, value: BigDecimal, active: Boolean
+			columns name: 'int', date: 'date', count: 'int', value: 'decimal', active: 'boolean'
 		}
 		ins.close()
 	}

@@ -16,7 +16,7 @@ class NonXmlWorkbookParserSpec extends WorkbookParserSpec {
 		WorkbookParser parser = new WorkbookParser(workbook)
 		println parser.grid {
 			headerRows 1
-			columns name: String, date: Date, count: Integer, value: BigDecimal, active: Boolean
+			columns name: 'int', date: 'date', count: 'int', value: 'decimal', active: 'boolean'
 		}
 		ins.close()
 	}
