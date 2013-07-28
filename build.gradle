@@ -12,7 +12,7 @@ codenarc {
 	ignoreFailures = true
 }
 
-defaultTasks 'clean', 'build', 'groovydoc'
+defaultTasks 'clean', 'build', 'groovydoc', 'cobertura'
 
 version = '0.3'
 
@@ -34,4 +34,12 @@ dependencies {
 
 task wrapper(type: Wrapper) {
 	gradleVersion = '1.6'
+}
+
+buildscript {
+	apply from: 'https://github.com/valkolovos/gradle_cobertura/raw/master/repo/gradle_cobertura/gradle_cobertura/1.0/coberturainit.gradle'
+}
+
+cobertura {
+	coverageSourceDirs = [project.sourceSets.main.groovy.srcDirs]
 }
