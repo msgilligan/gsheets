@@ -111,7 +111,7 @@ abstract class WorkbookParserSpec extends Specification {
 		!parser.errors
 	}
 	
-	def 'parsing a grid fails fast with an unsupported conversion'() {
+	def 'parsing a grid fails fast with an unsupported extractor'() {
 		given:
 		builder.workbook { 
 			sheet('a') {
@@ -125,10 +125,10 @@ abstract class WorkbookParserSpec extends Specification {
 		
 		then:
 		IllegalArgumentException x = thrown()
-		x.message == 'map is not a supported convertor for column y'
+		x.message == 'map is not a supported extractor for column y'
 	}
 	
-	def 'can parse a grid using a custom cell convertor'() {
+	def 'can parse a grid using a custom cell extractor'() {
 		given:
 		builder.workbook {
 			sheet('special') {
@@ -140,7 +140,7 @@ abstract class WorkbookParserSpec extends Specification {
 		
 		when:
 		List data = parser.grid {
-			convertor('toUpper') { it.toString().toUpperCase() }
+			extractor('toUpper') { it.toString().toUpperCase() }
 			columns x: 'toUpper'
 		}
 		

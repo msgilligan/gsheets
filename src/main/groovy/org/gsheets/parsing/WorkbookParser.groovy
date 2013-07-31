@@ -20,7 +20,7 @@ class WorkbookParser {
 	
 	private final List errors = []
 	
-	private final Map convertors = [
+	private final Map extractors = [
 		string: this.&cellAsString,
 		decimal: this.&cellAsBigDecimal,
 		'int': this.&cellAsInteger,
@@ -78,12 +78,12 @@ class WorkbookParser {
 	void columns(Map columns) { columnMap = columns }
 	
 	/**
-	 * Adds or replaces a convertor.
+	 * Adds or replaces an extractor.
 	 * 
-	 * @param name of the convertor
-	 * @param convertor Closure that extracts data from a Cell
+	 * @param name of the extractor
+	 * @param extractor Closure that extracts data from a Cell
 	 */
-	void convertor(String name, Closure convertor) { convertors[name] = convertor }
+	void extractor(String name, Closure extractor) { extractors[name] = extractor }
 	
 	private List<Map> data(Workbook workbook) {
 		List data = []
@@ -101,17 +101,17 @@ class WorkbookParser {
 		columnMap.eachWithIndex { column, name, index ->
 			Cell cell = row.getCell(index)
 			if (name != 'skip') {
-				Closure convertor = convertors[name]
-				if (convertor) {
+				Closure extractor = extractors[name]
+				if (extractor) {
 					try { 
-						data[column] = convertor cell
+						data[column] = extractor cell
 					} catch (Exception e) {
 						data[column] = null
 						errors << [rowIndex: row.rowNum, columnIndex: index, column: column, error: e.toString(), value: cell.toString()]
 					}
 				}
 				else { 
-					throw new IllegalArgumentException("$name is not a supported convertor for column $column")
+					throw new IllegalArgumentException("$name is not a supported extractor for column $column")
 				}
 			}
 		}
