@@ -6,9 +6,9 @@ The original code, ExcelFile, does not support xml spreadsheets and is provided 
 
 0.3 adds grid parsing functionality for declaratively reading spreadsheets. 
 
-It assumes a simple grid on the first worksheet originating at rowIndex 0 and columnIndex 0, but this will probably be expanded to support use arbitrary worksheets and grid placement.
+It assumes a simple grid on the first worksheet originating at rowIndex 0 or a specified startRowIndex and columnIndex 0.
 
-Plans as of 2013-07 include enhanced parsing integration tests, additional spreadsheet building features, and better documentation.
+Plans as of 2013-07 include enhanced parsing, integration tests, additional spreadsheet building features, and better documentation.
 
 Check the tests for more complete examples of usage. There are main methods on the tests that can be used to demonstrate building and parsing spreadsheets.
 
@@ -38,19 +38,19 @@ out.close()
 
 
 
-A simple example of a parsing a Workbook that pulls in all physically existing rows, disregarding header rows, with columns of various simple types as a List of Maps:
+A simple example of a parsing a Workbook that pulls in all physically existing rows, disregarding a header row, with columns of various simple types as a List of Maps:
 
 FileInputStream ins = new FileInputStream('demo.xlsx')
 Workbook workbook = new XSSFWorkbook(ins)
 WorkbookParser parser = new WorkbookParser(workbook)
 List data = parser.grid {
-    headerRows 1
+    startRowIndex = 1
 	columns name: String, date: Date, count: Integer, value: BigDecimal, active: Boolean
 }
 ins.close()
 
-If you don't like a provided conversion or need a new one, you can replace an existing one or provide a new one by adding a line to your parsing Closure, i.e.:
-    convertor('toUpper') { Cell cell -> cell.toString().toUpperCase() }
+If you don't like a provided extractor or need a new one, you can replace an existing one or provide a new one by adding a line to your parsing Closure, i.e.:
+    extractor('toUpper') { Cell cell -> cell.toString().toUpperCase() }
 
-As to error handling, parsing will collect a List of individual cell data conversion errors. It will also fail fast on an unsupported conversion. 
+As to error handling, parsing will collect a List of individual cell data extraction errors. It will also fail fast on an unsupported extractor. 
  

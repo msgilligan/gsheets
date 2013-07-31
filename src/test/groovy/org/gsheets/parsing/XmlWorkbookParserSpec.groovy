@@ -16,7 +16,7 @@ class XmlWorkbookParserSpec extends WorkbookParserSpec {
 		Workbook workbook = new XSSFWorkbook(ins)
 		WorkbookParser parser = new WorkbookParser(workbook)
 		println parser.grid {
-			headerRows 1
+			startRowIndex = 1
 			columns name: 'int', date: 'date', count: 'int', value: 'decimal', active: 'boolean'
 		}
 		ins.close()

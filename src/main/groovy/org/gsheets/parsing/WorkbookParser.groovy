@@ -63,17 +63,10 @@ class WorkbookParser {
 	}
 	
 	/**
-	 * Sets the no. of header rows to skip when parsing a grid.
-	 * 
-	 * @param rows
-	 */
-	void headerRows(int rows) { startRowIndex = rows }
-	
-	/**
-	 * Sets the column data extraction strategy. Columns are processed in order.
+	 * Sets the column data extractor strategy. Columns are processed in order.
 	 * 'skip' is a special strategy that skips over a column.
 	 * 
-	 * @param columns LinkedHashMap of column names to convertor names
+	 * @param columns LinkedHashMap of column names to extractor names
 	 */
 	void columns(Map columns) { columnMap = columns }
 	
