@@ -14,7 +14,13 @@ class WorkbookParser {
 	
 	private final Workbook workbook
 	
+	private String sheetName
+	
+	private int sheetIndex
+	
 	private int startRowIndex
+	
+	private int startColumnIndex
 	
 	private Map columnMap = [:]
 	
@@ -63,6 +69,20 @@ class WorkbookParser {
 	}
 	
 	/**
+	 * Sets the name of the worksheet of interest.
+	 * 
+	 * @param name worksheet name
+	 */
+	void sheet(String name) { sheetName = name }
+	
+	/**
+	 * Sets the index of the worksheet of interest.
+	 * 
+	 * @param name worksheet index
+	 */
+	void sheet(int index) { sheetIndex = index }
+	
+	/**
 	 * Sets the column data extractor strategy. Columns are processed in order.
 	 * 'skip' is a special strategy that skips over a column.
 	 * 
@@ -80,7 +100,10 @@ class WorkbookParser {
 	
 	private List<Map> data(Workbook workbook) {
 		List data = []
-		Sheet sheet = workbook.getSheetAt(0)
+		Sheet sheet 
+		if (sheetName) { sheet = workbook.getSheet(sheetName) }
+		sheet = sheet ?: workbook.getSheetAt(sheetIndex)
+
 		int rows = sheet.physicalNumberOfRows - startRowIndex
 		rows.times {
 			Row row = sheet.getRow(it + startRowIndex)
@@ -92,7 +115,7 @@ class WorkbookParser {
 	private Map rowData(Row row) {
 		Map data = [:]
 		columnMap.eachWithIndex { column, name, index ->
-			Cell cell = row.getCell(index)
+			Cell cell = row.getCell(index + startColumnIndex)
 			if (name != 'skip') {
 				Closure extractor = extractors[name]
 				if (extractor) {

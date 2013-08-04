@@ -46,7 +46,7 @@ abstract class WorkbookParserSpec extends Specification {
 	
 	def setup() { builder = newBuilder() }
 	
-	def 'can parse a grid without header rows of simple types'() {
+	def 'can parse a grid without header rows of simple types from the first worksheet by default'() {
 		given:
 		builder.workbook buildIt
 		parser = newParser(builder.wb)
@@ -126,6 +126,68 @@ abstract class WorkbookParserSpec extends Specification {
 		then:
 		IllegalArgumentException x = thrown()
 		x.message == 'map is not a supported extractor for column y'
+	}
+	
+	def 'can parse a grid from a worksheet by name'() {
+		given:
+		builder.workbook {
+			sheet('one') {}
+			sheet('special') {
+				row 'something'
+			}
+		}
+		parser = newParser(builder.wb)
+		
+		
+		when:
+		List data = parser.grid {
+			sheet('special')
+			columns x: 'string'
+		}
+		
+		then:
+		data[0] == [x: 'something']
+	}
+	
+	def 'can parse a grid from a worksheet by index'() {
+		given:
+		builder.workbook {
+			sheet('one') {}
+			sheet('special') {
+				row 'something'
+			}
+		}
+		parser = newParser(builder.wb)
+		
+		
+		when:
+		List data = parser.grid {
+			sheet(1)
+			columns x: 'string'
+		}
+		
+		then:
+		data[0] == [x: 'something']
+	}
+	
+	def 'can parse a grid skipping columns'() {
+		given:
+		builder.workbook {
+			sheet('special') {
+				row 'a', 'b', 'something'
+			}
+		}
+		parser = newParser(builder.wb)
+		
+		
+		when:
+		List data = parser.grid {
+			startColumnIndex = 2
+			columns x: 'string'
+		}
+		
+		then:
+		data == [[x: 'something']]
 	}
 	
 	def 'can parse a grid using a custom cell extractor'() {

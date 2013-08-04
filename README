@@ -6,7 +6,8 @@ The original code, ExcelFile, does not support xml spreadsheets and is provided 
 
 0.3 adds grid parsing functionality for declaratively reading spreadsheets. 
 
-It assumes a simple grid on the first worksheet originating at rowIndex 0 or a specified startRowIndex and columnIndex 0.
+It assumes a simple grid on the specified worksheet, by name or index, originating at a specified startRowIndex (default is 0) and columnIndex (default is 0).
+If no worksheet is specified, the first will be used. 
 
 Plans as of 2013-07 include enhanced parsing, integration tests, additional spreadsheet building features, and better documentation.
 
