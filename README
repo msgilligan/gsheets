@@ -9,10 +9,11 @@ The original code, ExcelFile, does not support xml spreadsheets and is provided 
 It assumes a simple grid on the specified worksheet, by name or index, originating at a specified startRowIndex (default is 0) and columnIndex (default is 0).
 If no worksheet is specified, the first will be used. 
 
-Plans as of 2013-07 include enhanced parsing, integration tests, additional spreadsheet building features, and better documentation.
+Plans as of 2013-08 include additional spreadsheet building features, better documentation.
 
 Check the tests for more complete examples of usage. There are main methods on the tests that can be used to demonstrate building and parsing spreadsheets.
 
+There are simple loading/parsing examples in the integration tests.
 
 
 A simple example of building a Workbook with a Sheet with 1 header row and 3 data rows of 4 columns:

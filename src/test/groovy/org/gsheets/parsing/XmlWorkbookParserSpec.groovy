@@ -12,7 +12,7 @@ class XmlWorkbookParserSpec extends WorkbookParserSpec {
 	
 	// Note: run the corresponding builder spec as an app first to create the file 
 	static void main(String[] args) {
-		FileInputStream ins = new FileInputStream('demo.xlsx')
+		FileInputStream ins = new FileInputStream('demo_test.xlsx')
 		Workbook workbook = new XSSFWorkbook(ins)
 		WorkbookParser parser = new WorkbookParser(workbook)
 		println parser.grid {

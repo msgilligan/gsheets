@@ -18,9 +18,9 @@ class WorkbookParser {
 	
 	private int sheetIndex
 	
-	private int startRowIndex
+	int startRowIndex
 	
-	private int startColumnIndex
+	int startColumnIndex
 	
 	private Map columnMap = [:]
 	
