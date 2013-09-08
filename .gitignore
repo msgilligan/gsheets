@@ -21,6 +21,7 @@ local.properties
 .idea/
 .gradle/
 build/
+gradle.properties
 
 .DS_Store
 Icon?
