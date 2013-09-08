@@ -54,5 +54,8 @@ ins.close()
 If you don't like a provided extractor or need a new one, you can replace an existing one or provide a new one by adding a line to your parsing Closure, i.e.:
     extractor('toUpper') { Cell cell -> cell.toString().toUpperCase() }
 
-As to error handling, parsing will collect a List of individual cell data extraction errors. It will also fail fast on an unsupported extractor. 
+As to error handling, parsing will collect a List of individual cell data extraction errors. It will also fail fast on an unsupported extractor.
+
+Note: the 'long' extractor is limited to 15 decimal digit Longs.
+ 
  
