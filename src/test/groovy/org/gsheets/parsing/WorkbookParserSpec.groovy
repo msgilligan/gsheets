@@ -66,7 +66,7 @@ abstract class WorkbookParserSpec extends Specification {
 		!parser.errors
 		
 		where:
-		[a, b, c] << abcData().collect { map -> map.collect { it.value } }
+		[a, b, c] << abcData().collect { it*.value }
 		
 		// Alternatively
 //		row << abcData()

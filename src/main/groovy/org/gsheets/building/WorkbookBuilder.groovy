@@ -1,6 +1,8 @@
 package org.gsheets.building
 
 import org.apache.poi.ss.usermodel.Cell
+import org.apache.poi.ss.usermodel.CellStyle
+import org.apache.poi.ss.usermodel.DataFormat
 import org.apache.poi.ss.usermodel.Row
 import org.apache.poi.ss.usermodel.Sheet
 import org.apache.poi.ss.usermodel.Workbook
@@ -21,6 +23,7 @@ class WorkbookBuilder {
 	Sheet currentSheet
 	int nextRowNum
 	Row currentRow
+	String defaultWorkbookDateFormat = 'yyyy-mm-dd hh:mm'
 
 	WorkbookBuilder(boolean xml) {
 		support = xml ? new XmlWorkbookSupport() : new NonXmlWorkbookSupport()
@@ -84,7 +87,12 @@ class WorkbookBuilder {
 	
 	Cell cell(Number value, int column) { createCell value, column, Cell.CELL_TYPE_NUMERIC }
 	
-	Cell cell(Date date, int column) { createCell date, column, Cell.CELL_TYPE_NUMERIC }
+	Cell cell(Date date, int column) { 
+		Cell cell = createCell date, column, Cell.CELL_TYPE_NUMERIC
+		CellStyle cellStyle = wb.createCellStyle()
+		cellStyle.dataFormat = wb.creationHelper.createDataFormat().getFormat(defaultWorkbookDateFormat)
+		cell.setCellStyle cellStyle
+	}
 	
 	Cell cell(Formula formula, int column) { createCell formula.text, column, Cell.CELL_TYPE_FORMULA }
 	

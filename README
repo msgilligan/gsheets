@@ -4,7 +4,8 @@ It can be used to declaratively build or parse spreadsheets.
 
 The original code, ExcelFile, does not support xml spreadsheets and is provided as a convenience and to provide building functionality not yet provided.
 
-0.3 adds grid parsing functionality for declaratively reading spreadsheets. 
+0.3 adds grid parsing functionality for declaratively reading spreadsheets.
+0.3.1 adds support for a default Workbook Date format of 'yyyy-mm-dd hh:mm', showing military style time and the ability to supply custom date formats by columnIndex 
 
 It assumes a simple grid on the specified worksheet, by name or index, originating at a specified startRowIndex (default is 0) and columnIndex (default is 0).
 If no worksheet is specified, the first will be used. 

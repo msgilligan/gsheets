@@ -173,6 +173,24 @@ abstract class WorkbookBuilderSpec extends Specification {
 		
 		then:
 		fetchCell0(0).dateCellValue == date
+		fetchCell0(0).cellStyle.dataFormatString == 'yyyy-mm-dd hh:mm'
+	}
+	
+	def 'can build a Date cell with a particular format string'() {
+		given:
+		SimpleDateFormat sdf = new SimpleDateFormat('yyyy-MM-dd', Locale.default)
+		Date date = sdf.parse('1951-08-06')
+		
+		when:
+		builder.workbook {
+			sheet('f') {
+				row('x', date)
+			}
+		}
+		
+		then:
+		fetchCell(0, 1).dateCellValue == date
+		fetchCell(0, 1).cellStyle.dataFormatString == 'yyyy-mm-dd hh:mm'
 	}
 	
 	def 'can build an object cell as a String'() {
@@ -254,11 +272,11 @@ abstract class WorkbookBuilderSpec extends Specification {
 	
 	static demospec = {
 		workbook {
-			def fmt = new SimpleDateFormat('yyyy-MM-dd', Locale.default)
+			def fmt = new SimpleDateFormat('yyyy-MM-dd HHmm', Locale.default)
 			sheet('sheet 1') {
 				row('Name', 'Date', 'Count', 'Value', 'Active')
-				row('a', fmt.parse('2012-09-12'), 69, 12.34, true)
-				row('b', fmt.parse('2012-09-13'), 666, 43.21, false)
+				row('a', fmt.parse('2012-09-12 1012'), 69, 12.34, true)
+				row('b', fmt.parse('2012-09-13 2213'), 666, 43.21, false)
 			}
 		}
 	}

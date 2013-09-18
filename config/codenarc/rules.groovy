@@ -38,6 +38,8 @@ ruleset {
 	}
 	ruleset('rulesets/serialization.xml')
 	ruleset('rulesets/size.xml')
-	ruleset('rulesets/unnecessary.xml')
+	ruleset('rulesets/unnecessary.xml') {
+		exclude 'UnnecessaryCollectCall'
+	}
 	ruleset('rulesets/unused.xml')
 }
