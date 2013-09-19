@@ -5,7 +5,9 @@ It can be used to declaratively build or parse spreadsheets.
 The original code, ExcelFile, does not support xml spreadsheets and is provided as a convenience and to provide building functionality not yet provided.
 
 0.3 adds grid parsing functionality for declaratively reading spreadsheets.
-0.3.1 adds support for a default Workbook Date format of 'yyyy-mm-dd hh:mm', showing military style time and the ability to supply custom date formats by columnIndex 
+
+0.3.1 adds support for a default Workbook Date format of 'yyyy-mm-dd hh:mm', showing military style time hours (0-23)
+0.3.2 adds the ability to autosize a specific no. of columns - call this after the sheet has been populated 
 
 It assumes a simple grid on the specified worksheet, by name or index, originating at a specified startRowIndex (default is 0) and columnIndex (default is 0).
 If no worksheet is specified, the first will be used. 
@@ -26,6 +28,7 @@ Workbook workbook = builder.workbook {
 			row('Name', 'Date', 'Count', 'Value', 'Active')
 			row('a', fmt.parse('2012-09-12'), 69, 12.34, true)
 			row('b', fmt.parse('2012-09-13'), 666, 43.21, false)
+			autoColumnWidth(5)
 		}
 	}	
 }

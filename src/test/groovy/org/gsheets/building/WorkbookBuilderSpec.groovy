@@ -122,6 +122,7 @@ abstract class WorkbookBuilderSpec extends Specification {
 		
 		then:
 		fetchCell0(0).stringCellValue == 's'
+		fetchSheet().getColumnWidth(0) == 2048
 	}
 	
 	def 'can build a Boolean cell'() {
@@ -252,6 +253,22 @@ abstract class WorkbookBuilderSpec extends Specification {
 		x.message == 'can NOT build a row outside a sheet'
 	}
 	
+	def 'can auto size columns'() {
+		when:
+		builder.workbook {
+			sheet('c') {
+				row('s', 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+				autoColumnWidth(2)
+			}
+		}
+		
+		then:
+		fetchCell0(0).stringCellValue == 's'
+		fetchSheet().getColumnWidth(0) < 2048
+		fetchCell(0, 1).stringCellValue == 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+		fetchSheet().getColumnWidth(1) > 2048
+	}
+	
 	static class SomeClass {
 		String toString() {
 			'someObject'
@@ -277,6 +294,7 @@ abstract class WorkbookBuilderSpec extends Specification {
 				row('Name', 'Date', 'Count', 'Value', 'Active')
 				row('a', fmt.parse('2012-09-12 1012'), 69, 12.34, true)
 				row('b', fmt.parse('2012-09-13 2213'), 666, 43.21, false)
+				autoColumnWidth(5)
 			}
 		}
 	}

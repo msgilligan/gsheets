@@ -81,6 +81,12 @@ class WorkbookBuilder {
 		currentRow
 	}
 	
+	void autoColumnWidth(int columns) {
+		for (i in 0..<columns) {
+			currentSheet.autoSizeColumn(i)
+		}
+	}
+	
 	Cell cell(String value, int column) { createCell value, column, Cell.CELL_TYPE_STRING }
 	
 	Cell cell(Boolean value, int column) { createCell value, column, Cell.CELL_TYPE_BOOLEAN }
