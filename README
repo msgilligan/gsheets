@@ -19,7 +19,7 @@ Check the tests for more complete examples of usage. There are main methods on t
 There are simple loading/parsing examples in the integration tests.
 
 
-A simple example of building a Workbook with a Sheet with 1 header row and 3 data rows of 4 columns:
+A simple example of building a Workbook with a Sheet with 1 header row and 3 data rows of 5 columns:
 
 Workbook workbook = builder.workbook {
 	workbook {
