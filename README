@@ -51,7 +51,7 @@ Workbook workbook = new XSSFWorkbook(ins)
 WorkbookParser parser = new WorkbookParser(workbook)
 List data = parser.grid {
     startRowIndex = 1
-	columns name: String, date: Date, count: Integer, value: BigDecimal, active: Boolean
+	columns name: 'string', date: 'date', count: 'int', value: 'decimal', active: 'boolean'
 }
 ins.close()
 
