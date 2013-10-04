@@ -32,10 +32,6 @@ dependencies {
     compile 'org.apache.poi:poi-ooxml:3.8'
 }
 
-task wrapper(type: Wrapper) {
-	gradleVersion = '1.6'
-}
-
 buildscript {
 	apply from: 'https://github.com/valkolovos/gradle_cobertura/raw/master/repo/gradle_cobertura/gradle_cobertura/1.0/coberturainit.gradle'
 }
