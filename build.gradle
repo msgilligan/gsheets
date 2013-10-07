@@ -39,3 +39,14 @@ buildscript {
 cobertura {
 	coverageSourceDirs = [project.sourceSets.main.groovy.srcDirs]
 }
+
+// Create output directory for sample programs
+task sampleOutputDir << {
+    file("${buildDir}/sample-output").mkdirs()
+}
+
+// Run sample program to generate localization properties files from a master XLS spreadsheet
+task(sampleI18nSplit, dependsOn: ['classes', sampleOutputDir],  type: JavaExec) {
+    main = 'org.gsheets.samples.i18n.I18nXLSToProperties'
+    classpath = sourceSets.main.runtimeClasspath
+}
