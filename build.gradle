@@ -1,4 +1,6 @@
 apply plugin: 'groovy'
+apply plugin: 'maven-publish'
+
 sourceCompatibility = 1.6
 targetCompatibility = 1.6
 
@@ -14,6 +16,7 @@ codenarc {
 
 defaultTasks 'clean', 'build', 'groovydoc', 'cobertura'
 
+group = 'org.gsheets'
 version = '0.3.2'
 
 repositories {
@@ -38,4 +41,13 @@ buildscript {
 
 cobertura {
 	coverageSourceDirs = [project.sourceSets.main.groovy.srcDirs]
+}
+
+// Use publishGsheetsPublicationToMavenLocal task to publish to Maven local repo
+publishing {
+    publications {
+        gsheets(MavenPublication) {
+            from components.java
+        }
+    }
 }
