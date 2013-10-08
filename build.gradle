@@ -1,3 +1,13 @@
+buildscript {
+    repositories {
+        maven { url 'http://jcenter.bintray.com' }
+    }
+    dependencies {
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:0.3'
+    }
+}
+apply plugin: 'bintray'
+
 apply plugin: 'groovy'
 apply plugin: 'maven-publish'
 
@@ -16,8 +26,9 @@ codenarc {
 
 defaultTasks 'clean', 'build', 'groovydoc', 'cobertura'
 
-group = 'org.gsheets'
-version = '0.3.2'
+//group = 'org.gsheets'
+group = 'com.msgilligan.gsheets'
+version = '0.3.3'
 
 repositories {
     mavenCentral()
@@ -50,4 +61,29 @@ publishing {
             from components.java
         }
     }
+}
+
+ext.dry = false  // dryRun flag for bintray (others?)
+
+bintrayUpload.dependsOn jar
+
+ext {
+    dry = false // dryRun flag for bintray (and anything else?)
+    myBintray = [ apiKey: binTrayAPIKey ]   // Set 'binTrayAPIKey' in ~/.gradle/gradle.properties
+}
+
+bintray {
+    user = 'msgilligan'
+    key = myBintray.apiKey
+//    configurations = ['deployables'] // When uploading configuration files
+    publications = ['gsheets'] // When uploading Maven-based publication files
+    pkg {
+        repo = 'maven'
+//        userOrg = 'myorg' // an optional organization name when the repo belongs to one of the user's orgs
+        name = 'msgilligan-gsheets'
+        desc = 'My slightly hacked version of kktec/gsheets.'
+        licenses = ['Apache-2.0']
+        labels = ['gsheets', 'groovy', 'gradle', 'poi', 'excel']
+    }
+    dryRun = dry // whether to run this as dry-run, without deploying
 }
